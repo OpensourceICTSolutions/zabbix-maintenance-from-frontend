@@ -1,3 +1,12 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Copyright 2021 Opensource ICT Solutions B.V.
+# https://oicts.com
+#
+#version: 1.0.0
+#date: 11-02-2021
+
 ###############################################################################################################
 ### Place this script in a directory on your zabbix server and make sure it is accesible by the zabbix user.###
 ### Make sure there is a API user present and update the variable below                                     ###
