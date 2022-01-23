@@ -8,4 +8,4 @@ Besides making it possible to set maintenance for Zabbix users, this script will
 ## How to use the script
 For a comprehensive guide check out our Zabbix book:
 
-https://www.amazon.com/Zabbix-Infrastructure-Monitoring-Cookbook-maintaining/dp/1800202237
+https://www.amazon.com/Zabbix-Infrastructure-Monitoring-Cookbook-maintaining-dp-180324691X/dp/180324691X
