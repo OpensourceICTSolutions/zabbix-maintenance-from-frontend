@@ -1,12 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-#
-# Copyright 2021 Opensource ICT Solutions B.V.
-# https://oicts.com
-#
-#version: 1.0.0
-#date: 11-02-2021
-
 ###############################################################################################################
 ### Place this script in a directory on your zabbix server and make sure it is accesible by the zabbix user.###
 ### Make sure there is a API user present and update the variable below                                     ###
@@ -23,8 +14,8 @@ import time
 import sys
 from datetime import datetime
 
-url = 'https://example.com/zabbix/api_jsonrpc.php?'
-token = "PUT_YOUR_TOKEN_HERE"
+url = 'http://192.168.0.102/zabbix/api_jsonrpc.php?'
+token = "b4ca33e6bdf67e0988f6dd0bad61317d4b7fe45fe2afc56d4b8e999e0a3fc23b"
 
 hostname = sys.argv[2]
 period = sys.argv[3]
@@ -97,10 +88,9 @@ def maintenance_get(token, hostid):
     if len(response["result"]) > 0:
         if 'maintenanceid' in response["result"][0]:
             return (response["result"][0]["maintenanceid"],
-                    response["result"][0]["timeperiods"][0]["timeperiodid"],)
+                    response["result"][0]["timeperiods"][0],)
     else:
         return (False, False,)
-
 
 # -------------------
 # End of get maintenance
