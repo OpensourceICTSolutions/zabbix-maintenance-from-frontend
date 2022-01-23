@@ -4,9 +4,8 @@
 # Copyright 2021 Opensource ICT Solutions B.V.
 # https://oicts.com
 #
-#version: 1.0.0
-#date: 11-02-2021
-
+#version: 2.0.0
+#date: 23-01-2022
 ###############################################################################################################
 ### Place this script in a directory on your zabbix server and make sure it is accesible by the zabbix user.###
 ### Make sure there is a API user present and update the variable below                                     ###
@@ -97,10 +96,9 @@ def maintenance_get(token, hostid):
     if len(response["result"]) > 0:
         if 'maintenanceid' in response["result"][0]:
             return (response["result"][0]["maintenanceid"],
-                    response["result"][0]["timeperiods"][0]["timeperiodid"],)
+                    response["result"][0]["timeperiods"][0],)
     else:
         return (False, False,)
-
 
 # -------------------
 # End of get maintenance
