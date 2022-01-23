@@ -24,9 +24,7 @@ import sys
 from datetime import datetime
 
 url = 'https://example.com/zabbix/api_jsonrpc.php?'
-username = "username"
-password = "password"
-
+token = "PUT_YOUR_TOKEN_HERE"
 
 hostname = sys.argv[2]
 period = sys.argv[3]
@@ -35,7 +33,6 @@ headers = {'Content-Type': 'application/json'}
 
 def main():
     if sys.argv[1].lower() == 'create':
-        token = login()
         hostid = hostid_get(token)
         maintenance_id, timeperiodid = maintenance_get(token, hostid)
         if maintenance_id:
@@ -44,9 +41,7 @@ def main():
             new_epoch = maintenance_set(token, hostid)
         message(new_epoch)
         maintenance_get(token, hostid)
-        logout(token)
     elif sys.argv[1] == 'delete':
-        token = login()
         hostid = hostid_get(token)
         maintenance_id, timeperiodid = maintenance_get(token, hostid)
         if maintenance_id:
@@ -54,40 +49,6 @@ def main():
             message_delete()
         else:
             message_delete()
-        logout(token)
-
-def login():
-    token = "null"
-
-    #Login payload
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'user.login'
-    payload['params'] = {}
-    payload['params']['user'] = username
-    payload['params']['password'] = password
-    payload['id'] = 1
-
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
-    data = request.json()
-
-    token = data["result"]
-    return token
-
-
-
-def logout(token):
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'user.login'
-    payload['params'] = {}
-    payload['params']['user'] = username
-    payload['params']['password'] = password
-    payload['auth'] = token
-    payload['id'] = 1
-
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
-
 
 # --------------------
 # Delete maintenance period of the selected host
