@@ -5,7 +5,8 @@
 # https://oicts.com
 #
 #version: 2.0.0
-#date: 23-01-2022
+#date: 19-02-2022
+
 ###############################################################################################################
 ### Place this script in a directory on your zabbix server and make sure it is accesible by the zabbix user.###
 ### Make sure there is a API user present and update the variable below                                     ###
@@ -22,8 +23,8 @@ import time
 import sys
 from datetime import datetime
 
-url = 'https://example.com/zabbix/api_jsonrpc.php?'
-token = "PUT_YOUR_TOKEN_HERE"
+url = 'http://192.168.0.132/zabbix/api_jsonrpc.php?'
+token = "302076c92204cef96c93bd11a2c22305313af83307195d1fd8370809ebccf7cb"
 
 hostname = sys.argv[2]
 period = sys.argv[3]
@@ -33,8 +34,9 @@ headers = {'Content-Type': 'application/json'}
 def main():
     if sys.argv[1].lower() == 'create':
         hostid = hostid_get(token)
-        maintenance_id, timeperiodid = maintenance_get(token, hostid)
-        if maintenance_id:
+        maintenance_id = maintenance_get(token, hostid)
+        print(maintenance_id)
+        if maintenance_id is not False:
             new_epoch = maintenance_update(token, maintenance_id, hostid)
         else:
             new_epoch = maintenance_set(token, hostid)
@@ -42,7 +44,7 @@ def main():
         maintenance_get(token, hostid)
     elif sys.argv[1] == 'delete':
         hostid = hostid_get(token)
-        maintenance_id, timeperiodid = maintenance_get(token, hostid)
+        maintenance_id = maintenance_get(token, hostid)
         if maintenance_id:
             maintenance_delete(token, maintenance_id)
             message_delete()
@@ -62,9 +64,7 @@ def maintenance_delete(token, maintenance_id):
     payload['id'] = 1
     request = requests.post(url, data=json.dumps(payload), headers=headers)
 
-    print(payload)
     response = request.json()
-    print(response)
 
 
 
@@ -95,10 +95,11 @@ def maintenance_get(token, hostid):
 
     if len(response["result"]) > 0:
         if 'maintenanceid' in response["result"][0]:
-            return (response["result"][0]["maintenanceid"],
-                    response["result"][0]["timeperiods"][0],)
+            return (response["result"][0]["maintenanceid"])
+                    #response["result"][0]["timeperiods"][0]["timeperiodid"],)
     else:
-        return (False, False,)
+        return (False)
+
 
 # -------------------
 # End of get maintenance
