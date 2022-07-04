@@ -4,8 +4,9 @@
 # Copyright 2021 Opensource ICT Solutions B.V.
 # https://oicts.com
 #
-#version: 2.0.0
-#date: 19-02-2022
+#version: 2.0.1
+#date: 04-07-2022
+
 
 ###############################################################################################################
 ### Place this script in a directory on your zabbix server and make sure it is accesible by the zabbix user.###
@@ -23,8 +24,8 @@ import time
 import sys
 from datetime import datetime
 
-url = 'http://192.168.0.132/zabbix/api_jsonrpc.php?'
-token = "302076c92204cef96c93bd11a2c22305313af83307195d1fd8370809ebccf7cb"
+url = 'https://example.com/zabbix/api_jsonrpc.php?'
+token = "PUT_YOUR_TOKEN_HERE"
 
 hostname = sys.argv[2]
 period = sys.argv[3]
@@ -35,7 +36,7 @@ def main():
     if sys.argv[1].lower() == 'create':
         hostid = hostid_get(token)
         maintenance_id = maintenance_get(token, hostid)
-        print(maintenance_id)
+        # print(maintenance_id)
         if maintenance_id is not False:
             new_epoch = maintenance_update(token, maintenance_id, hostid)
         else:
@@ -87,6 +88,7 @@ def maintenance_get(token, hostid):
     payload['params']['output'] = 'extend'
     payload['params']['hostids']= hostid
     payload['params']['selectTimeperiods'] = 'timeperiodid'
+    payload['params']['search'] = {"description": "This maintenance period is created by a script."}
     payload['auth'] = token
     payload['id'] = 1
     request = requests.post(url, data=json.dumps(payload), headers=headers)
@@ -121,7 +123,10 @@ def maintenance_update(token, maintenance_id, hostid):
     payload['params']['maintenanceid'] = maintenance_id
     payload['params']['active_since'] = current_epoch
     payload['params']['active_till'] = new_epoch
-    payload['params']['hostids'] = hostid
+    payload['params']['hosts'] = []
+    hosts = {}
+    hosts['hostid'] = hostid
+    payload['params']['hosts'].append(hosts)
     payload['params']['timeperiods'] = []
     timeperiods = {}
     timeperiods['start_date'] = current_epoch
@@ -179,7 +184,10 @@ def maintenance_set(token, hostid):
     payload['params']['name'] = "Maintenance period for: " + hostname + ""
     payload['params']['active_since'] = current_epoch
     payload['params']['active_till'] = new_epoch
-    payload['params']['hostids'] = [hostid]
+    payload['params']['hosts'] = []
+    hosts = {}
+    hosts['hostid'] = hostid
+    payload['params']['hosts'].append(hosts)
     payload['params']['description'] = "This maintenance period is created by a script."
     payload['params']['timeperiods'] = []
     timeperiods = {}
