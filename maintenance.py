@@ -4,8 +4,8 @@
 # Copyright 2021 Opensource ICT Solutions B.V.
 # https://oicts.com
 #
-#version: 2.0.0
-#date: 24-05-2022
+#version: 2.0.1
+#date: 04-07-2022
 
 
 ###############################################################################################################
@@ -24,8 +24,8 @@ import time
 import sys
 from datetime import datetime
 
-url = 'http://zabbix-url/zabbix/api_jsonrpc.php?'
-token = "API Token here"
+url = 'https://example.com/zabbix/api_jsonrpc.php?'
+token = "PUT_YOUR_TOKEN_HERE"
 
 hostname = sys.argv[2]
 period = sys.argv[3]
